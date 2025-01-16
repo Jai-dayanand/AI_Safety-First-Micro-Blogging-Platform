@@ -1,0 +1,10 @@
+body{
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    margin: 0;
+}
+h1{
+    color: blue;
+}
