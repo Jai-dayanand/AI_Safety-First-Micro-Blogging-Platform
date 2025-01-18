@@ -4,7 +4,7 @@ const tf = require('@tensorflow/tfjs-node');
 
 // Load CSV file
 const data = [];
-fs.createReadStream('twitter_sexism_parsed_dataset.csv') // Replace with your CSV file path
+fs.createReadStream('Cyber-Bullying/twitter_sexism_parsed_dataset.csv')
   .pipe(csv())
   .on('data', (row) => {
     data.push(row);
