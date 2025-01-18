@@ -40,3 +40,6 @@ Logistic Regression is a robust and interpretable algorithm for binary and multi
 - A trained Logistic Regression model capable of detecting cyberbullying across the five categories.
 - Insights into the most impactful words and phrases contributing to harmful behavior classification.
 - A foundation for future enhancements, such as using deep learning or integrating real-time detection in social media applications.
+
+
+node --max-old-space-size=25600 Cyber-Bullying/Sexism_Classifier.js
