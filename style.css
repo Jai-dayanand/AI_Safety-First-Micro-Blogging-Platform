@@ -159,14 +159,6 @@ header h1 {
     padding: 1rem;
 }
 
-.tweet {
-    background-color: var(--medium-bg);
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border-radius: 5px;
-    color: white;
-}
-
 footer {
     background: var(--darker-bg);
     text-align: center;
