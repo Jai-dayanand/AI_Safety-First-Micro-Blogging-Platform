@@ -1,6 +1,15 @@
 // Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    query,
+    orderBy,
+    deleteDoc,
+    doc
+} from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -21,22 +30,61 @@ const db = getFirestore(app);
 // DOM Elements
 const postButton = document.getElementById("post-tweet");
 const tweetInput = document.getElementById("tweet-input");
+const tagsInput = document.getElementById("tags-input");
 const tweetsContainer = document.getElementById("tweets-container");
 
 // Function to create a new tweet container
-function createTweetElement(tweetContent) {
+function createTweetElement(tweetContent, tags, docId = null) {
     const postElement = document.createElement("div");
     postElement.className = "tweet";
-    postElement.innerHTML = `
-        <p>${tweetContent}</p>
-        <span class="timestamp">${new Date().toLocaleString()}</span>
-    `;
+
+    const contentParagraph = document.createElement("p");
+    contentParagraph.textContent = tweetContent; // Preserve raw text
+    contentParagraph.style.whiteSpace = "pre-wrap";
+
+    const tagsContainer = document.createElement("div");
+    tagsContainer.className = "tags";
+    tags.forEach((tag) => {
+        const tagElement = document.createElement("span");
+        tagElement.textContent = `#${tag.trim()}`;
+        tagsContainer.appendChild(tagElement);
+    });
+
+    const timestampSpan = document.createElement("span");
+    timestampSpan.className = "timestamp";
+    timestampSpan.textContent = new Date().toLocaleString();
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "delete-button";
+    deleteButton.textContent = "Delete";
+    deleteButton.addEventListener("click", async () => {
+        if (confirm("Are you sure you want to delete this tweet?")) {
+            if (docId) {
+                // Delete from Firestore
+                try {
+                    await deleteDoc(doc(db, "posts", docId));
+                    console.log("Tweet deleted:", docId);
+                } catch (error) {
+                    console.error("Error deleting tweet:", error);
+                    alert("Failed to delete tweet.");
+                }
+            }
+            postElement.remove(); // Remove from UI
+        }
+    });
+
+    postElement.appendChild(contentParagraph);
+    postElement.appendChild(tagsContainer);
+    postElement.appendChild(timestampSpan);
+    postElement.appendChild(deleteButton);
+
     return postElement;
 }
 
 // Post a new tweet
 postButton.addEventListener("click", async () => {
     const tweetContent = tweetInput.value.trim();
+    const tags = tagsInput.value.split(",").map((tag) => tag.trim()).filter(Boolean); // Parse tags
 
     if (!tweetContent) {
         alert("Tweet content cannot be empty!");
@@ -46,16 +94,17 @@ postButton.addEventListener("click", async () => {
     try {
         const docRef = await addDoc(collection(db, "posts"), {
             content: tweetContent,
+            tags: tags,
             timestamp: new Date(),
-            
         });
         console.log("Tweet posted with ID:", docRef.id);
 
         // Create a new container and add it to the UI immediately
-        const newTweet = createTweetElement(tweetContent);
-        tweetsContainer.prepend(newTweet); // Add new tweet at the top
+        const newTweet = createTweetElement(tweetContent, tags, docRef.id);
+        tweetsContainer.prepend(newTweet);
 
         tweetInput.value = ""; // Clear the input field
+        tagsInput.value = ""; // Clear tags field
     } catch (error) {
         console.error("Error posting tweet:", error);
         alert("Failed to post tweet. Please try again.");
@@ -72,7 +121,7 @@ async function loadPosts() {
 
         querySnapshot.forEach((doc) => {
             const post = doc.data();
-            const postElement = createTweetElement(post.content);
+            const postElement = createTweetElement(post.content, post.tags || [], doc.id);
             tweetsContainer.appendChild(postElement);
         });
     } catch (error) {

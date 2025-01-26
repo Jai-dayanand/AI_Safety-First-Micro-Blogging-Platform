@@ -175,6 +175,44 @@ header h1 {
     opacity: 0.8;
 }
 
+.tweet p {
+    white-space: pre-wrap; /* Preserve spaces, line breaks, and formatting */
+    word-wrap: break-word; /* Ensure long words or URLs wrap correctly */
+}
+
+.tweet .tags {
+    font-size: 0.9rem;
+    color: #87cefa;
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tweet .tags span {
+    background-color: var(--medium-bg);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+}
+
+.tweet .delete-button {
+    margin-top: 0.5rem;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    float: right;
+}
+
+.tweet .delete-button:hover {
+    background-color: #e63946;
+}
+
+
 footer {
     background: var(--darker-bg);
     text-align: center;
