@@ -59,7 +59,7 @@ def predict_cyber_bullying(model, vectorizer, numeric_columns, texts, numeric_fe
         numeric_features (pd.DataFrame): DataFrame containing numeric features corresponding to the texts.
 
     Returns:
-        list: Predictions as "bully" or "not_bully".
+        str: Single prediction as "bully" or "not_bully".
     """
     # Vectorize the input texts
     X_text_features = vectorizer.transform(texts)
@@ -67,11 +67,11 @@ def predict_cyber_bullying(model, vectorizer, numeric_columns, texts, numeric_fe
     # Combine text features with numeric features
     X_combined = hstack([X_text_features, numeric_features])
 
-    # Make predictions
-    predictions = model.predict(X_combined)
+    # Make a single prediction
+    prediction = model.predict(X_combined)[0]
 
-    # Convert predictions to "bully" or "not_bully"
-    return ["bully" if pred == 1 else "not_bully" for pred in predictions]
+    # Convert prediction to "bully" or "not_bully"
+    return "bully" if prediction == 1 else "not_bully"
 
 # Example usage:
 if __name__ == "__main__":
@@ -82,14 +82,14 @@ if __name__ == "__main__":
     model, vectorizer, numeric_columns = train_cyber_bullying_model(file_path)
 
     # Example inputs for prediction
-    sample_texts = ["You are amazing!", "You are so stupid and worthless."]
+    sample_text = "You are amazing!"
     sample_numeric_features = pd.DataFrame(
-        {"ed_label_0": [0, 1], "ed_label_1": [0.2, 0.8]}
+        {"ed_label_0": [0], "ed_label_1": [0.2]}
     )
 
-    # Make predictions
-    predictions = predict_cyber_bullying(
-        model, vectorizer, numeric_columns, sample_texts, sample_numeric_features
+    # Make a prediction
+    prediction = predict_cyber_bullying(
+        model, vectorizer, numeric_columns, [sample_text], sample_numeric_features
     )
 
-    print("Predictions:", predictions)
+    print("Prediction:", prediction)
