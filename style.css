@@ -1,10 +1,190 @@
-body{
+/* Theme Colors */
+:root {
+    --dark-bg: #1a1a2e;
+    --darker-bg: #16213e;
+    --medium-bg: #0f3460;
+    --light-bg: #1e5f74;
+    --text-light: #d1d1d1;
+}
+
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--darker-bg);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    gap: 2rem;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+header .logo {
+    width: auto;
+    height: 40px;
+    border-radius: 10px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.auth-buttons {
+    margin-left: auto; /* Pushes the buttons to the right */
+    display: flex;
+    gap: 0.5rem;
+}
+
+.auth-buttons button {
+    background-color: var(--medium-bg);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-buttons button:hover {
+    background-color: var(--light-bg);
+}
+
+
+
+.main-container {
+    display: flex;
+    flex: 1;
+    margin-top: 4.5rem;
+    /* Account for fixed header height */
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 250px;
+    background: var(--darker-bg);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.prop-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--dark-bg);
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.prop-container h2 {
+    font-size: 1.5rem;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.prop-container ul {
+    width: 100%;
+    list-style: none;
+}
+
+.prop-container li {
+    display: flex;
     justify-content: center;
     align-items: center;
-    display: flex;
-    height: 100vh;
-    margin: 0;
+    padding: 0.8rem;
+    color: var(--text-light);
+    background-color: var(--darker-bg);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
 }
-h1{
-    color: blue;
+
+.prop-container li:hover {
+    background-color: var(--light-bg);
+    transform: translateY(-3px);
+    color: white;
+}
+
+/* Tweet Section */
+.tweet-section {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+#tweet-input {
+    width: 100%;
+    max-width: 600px;
+    height: 100px;
+    padding: 0.5rem;
+    border: 2px solid var(--medium-bg);
+    border-radius: 5px;
+    background-color: var(--darker-bg);
+    color: white;
+}
+
+#post-tweet {
+    background-color: var(--medium-bg);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#post-tweet:hover {
+    background-color: var(--light-bg);
+}
+
+.tweets-container {
+    width: 100%;
+    max-width: 600px;
+    background-color: var(--dark-bg);
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.tweet {
+    background-color: var(--medium-bg);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+    color: white;
+}
+
+/* Footer */
+footer {
+    background: var(--darker-bg);
+    text-align: center;
+    padding: 1rem;
 }

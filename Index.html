@@ -3,10 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Micro-Blogging</title>
+    <title>
+        <a>
+            SafeX
+        </a>
+    </title>
     <link rel="stylesheet" href="style.css">
+    <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"></script>
+    <script defer src="script.js"></script>
+ 
 </head>
 <body>
-    <h1>This is a microblogging website!</h1>
+    <header>
+        <div class="header-left">
+            <a href="#">
+                <img src="assets/Logo.png" alt="SafeX Logo" class="logo" />
+            </a>
+            <h1 class="name">SafeX</h1>
+        </div>
+        <div class="auth-buttons">
+            <button id="login-button">Log In</button>
+            <button id="signup-button">Sign Up</button>
+        </div>
+    </header>
+    
+    
+    
+    <main class="main-container">
+        <aside class="sidebar">
+            <div class="prop-container">
+                <h2>Menu</h2>
+                <ul>
+                    <li>Home</li>
+                    <li>Profile</li>
+                    <li>Settings</li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="tweet-section">
+            <textarea id="tweet-input" placeholder="What's on your mind?"></textarea>
+            <input type="file" id="image-input" accept="image/*">
+            <button id="post-tweet">Post</button>
+
+            <div id="tweets-container" class="tweets-container">
+                <!-- Tweets will appear here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SafeX. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+            projectId: "uniproj-ccbb3",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // DOM Elements
+        const tweetInput = document.getElementById("tweet-input");
+        const postTweetButton = document.getElementById("post-tweet");
+        const tweetsContainer = document.getElementById("tweets-container");
+
+        // Post Tweet
+        postTweetButton.addEventListener("click", () => {
+            const tweetText = tweetInput.value.trim();
+
+            if (tweetText === "") {
+                alert("Please enter some text.");
+                return;
+            }
+
+            // Push to Firebase Database
+            const tweetData = {
+                text: tweetText,
+                timestamp: new Date().toISOString()
+            };
+
+            const newTweetRef = firebase.database().ref("tweets").push();
+            newTweetRef
+                .set(tweetData)
+                .then(() => {
+                    console.log("Tweet posted successfully!");
+                    tweetInput.value = ""; // Clear input
+                })
+                .catch((error) => {
+                    console.error("Error posting tweet:", error);
+                });
+        });
+
+        // Fetch and Display Tweets
+        const fetchTweets = () => {
+            const tweetsRef = firebase.database().ref("tweets");
+            tweetsRef.on("value", (snapshot) => {
+                tweetsContainer.innerHTML = ""; // Clear previous tweets
+                const tweets = snapshot.val();
+
+                if (tweets) {
+                    Object.values(tweets).forEach((tweet) => {
+                        const tweetElement = document.createElement("div");
+                        tweetElement.classList.add("tweet");
+                        tweetElement.textContent = `${tweet.text} - ${new Date(tweet.timestamp).toLocaleString()}`;
+                        tweetsContainer.appendChild(tweetElement);
+                    });
+                }
+            });
+        };
+
+        // Fetch tweets on load
+        fetchTweets();
+    </script>
 </body>
 </html>
