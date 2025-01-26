@@ -1,42 +1,95 @@
-import pandas as pd
+from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
+import pandas as pd
 
-# Load dataset from CSV file
-file_path = "/home/jashupadhyay/Documents/Repos/AI_Safety-First-Micro-Blogging-Platform/Cyber-Bullying/cyber_bully.csv"
-df = pd.read_csv(file_path)
+def train_cyber_bullying_model(file_path):
+    """
+    Trains a logistic regression model for cyberbullying detection.
 
-# Display dataset information (optional)
-print("Dataset loaded successfully!")
-print(df.head())
-print("\nColumns:", df.columns)
+    Args:
+        file_path (str): Path to the CSV file containing the dataset.
 
-# Features and labels
-X_text = df["Text"]  # Text column
-X_numeric = df[["ed_label_0", "ed_label_1"]]  # Numeric features
-y = df["oh_label"]  # Target label
+    Returns:
+        tuple: A trained model, vectorizer, and feature column names for numerical data.
+    """
+    # Load the dataset
+    df = pd.read_csv(file_path)
 
-# Convert text to TF-IDF features
-vectorizer = TfidfVectorizer()
-X_text_features = vectorizer.fit_transform(X_text)
+    # Separate features and labels
+    X_text = df["Text"]
+    X_numeric = df[["ed_label_0", "ed_label_1"]]
+    y = df["oh_label"]
 
-# Combine text and numeric features
-import numpy as np
-X_combined = np.hstack([X_text_features.toarray(), X_numeric])
+    # Vectorize the text data
+    vectorizer = TfidfVectorizer(max_features=5000, min_df=5, max_df=0.7)
+    X_text_features = vectorizer.fit_transform(X_text)
 
-# Split data into train and test sets
-X_train, X_test, y_train, y_test = train_test_split(X_combined, y, test_size=0.2, random_state=42)
+    # Combine text features with numeric features
+    X_combined = hstack([X_text_features, X_numeric])
 
-# Train Logistic Regression model
-model = LogisticRegression()
-model.fit(X_train, y_train)
+    # Split the data into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(
+        X_combined, y, test_size=0.2, random_state=42
+    )
 
-# Make predictions
-y_pred = model.predict(X_test)
+    # Train a logistic regression model
+    model = LogisticRegression()
+    model.fit(X_train, y_train)
 
-# Evaluate the model
-accuracy = accuracy_score(y_test, y_pred)
-print("Accuracy:", accuracy)
-print("Classification Report:\n", classification_report(y_test, y_pred))
+    # Evaluate the model
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    print("Accuracy:", accuracy)
+    print("Classification Report:\n", classification_report(y_test, y_pred))
+
+    return model, vectorizer, ["ed_label_0", "ed_label_1"]
+
+def predict_cyber_bullying(model, vectorizer, numeric_columns, texts, numeric_features):
+    """
+    Predicts whether the given texts are bullying or not.
+
+    Args:
+        model: Trained logistic regression model.
+        vectorizer: Fitted TfidfVectorizer.
+        numeric_columns (list): List of numeric feature column names.
+        texts (list): List of text inputs to predict.
+        numeric_features (pd.DataFrame): DataFrame containing numeric features corresponding to the texts.
+
+    Returns:
+        str: Single prediction as "bully" or "not_bully".
+    """
+    # Vectorize the input texts
+    X_text_features = vectorizer.transform(texts)
+
+    # Combine text features with numeric features
+    X_combined = hstack([X_text_features, numeric_features])
+
+    # Make a single prediction
+    prediction = model.predict(X_combined)[0]
+
+    # Convert prediction to "bully" or "not_bully"
+    return "bully" if prediction == 1 else "not_bully"
+
+# Example usage:
+if __name__ == "__main__":
+    # Path to the dataset
+    file_path = "/home/jashupadhyay/Documents/Repos/AI_Safety-First-Micro-Blogging-Platform/Cyber-Bullying/cyber_bully.csv"
+
+    # Train the model
+    model, vectorizer, numeric_columns = train_cyber_bullying_model(file_path)
+
+    # Example inputs for prediction
+    sample_text = "You are amazing!"
+    sample_numeric_features = pd.DataFrame(
+        {"ed_label_0": [0], "ed_label_1": [0.2]}
+    )
+
+    # Make a prediction
+    prediction = predict_cyber_bullying(
+        model, vectorizer, numeric_columns, [sample_text], sample_numeric_features
+    )
+
+    print("Prediction:", prediction)
