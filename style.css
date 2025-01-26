@@ -158,9 +158,26 @@ header h1 {
     border-radius: 5px;
     padding: 1rem;
 }
+.tweet {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background-color: var(--medium-bg);
+    border-radius: 5px;
+    color: var(--text-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tweet .timestamp {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+    opacity: 0.8;
+}
 
 footer {
     background: var(--darker-bg);
     text-align: center;
     padding: 1rem;
 }
+

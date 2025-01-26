@@ -1,14 +1,22 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SafeX</title>
     <link rel="icon" href="assets/Logo.png" type="image/png">
     <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script defer src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js"></script>
+    
+
+    <!-- Custom Script -->
+    <script defer src="script.js" type="module"></script>
 </head>
+
 <body>
     <header>
         <div class="header-left">
@@ -34,12 +42,11 @@
 
     <main class="main-container">
         <section class="tweet-section">
-            <textarea id="tweet-input" placeholder="What's on your mind?"></textarea>
-            <input type="file" id="image-input" accept="image/*">
+            <textarea id="tweet-input" placeholder="What's on your mind?" ></textarea>
             <button id="post-tweet">Post</button>
 
-            <div id="tweets-container" class="tweets-container">
-            </div>
+            <!-- Container for displaying tweets -->
+            <div id="tweets-container" class="tweets-container"></div>
         </section>
     </main>
 
@@ -47,4 +54,5 @@
         <p>&copy; 2025 SafeX. All Rights Reserved.</p>
     </footer>
 </body>
+
 </html>
