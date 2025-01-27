@@ -8,7 +8,8 @@ from scipy.sparse import hstack
 import re
 
 # Step 1: Load Dataset
-df = pd.read_csv("bot_detection_data.csv")
+df = pd.read_csv(r"C:\Users\Atharva Chavan\Downloads\mln\AI_Safety-First-Micro-Blogging-Platform\Bot-Detection\bot_detection_data.csv")
+
 
 # Check for column names and strip extra spaces
 print("Columns in dataset:", df.columns)
