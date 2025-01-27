@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-from bot_detection_pipeline import bot_detection_pipeline
+from bot_detection import bot_detection_pipeline
 
 def create_mock_dataset():
     """Creates a mock dataset to test the bot detection pipeline."""
@@ -63,5 +63,4 @@ def test_bot_detection_pipeline(
         verified=verified,
     )
     assert result == expected_output, f"Failed for input: {input_text}"
-
 
