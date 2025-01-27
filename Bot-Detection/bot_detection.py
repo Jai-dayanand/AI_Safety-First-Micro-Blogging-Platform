@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from scipy.sparse import hstack
 import re
 
+
 def bot_detection_pipeline(dataset_path, input_text, retweet_count, mention_count, follower_count, verified):
     """
     A single function for bot detection that includes the entire pipeline:
