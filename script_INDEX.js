@@ -11,21 +11,21 @@ import {
     doc
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
-// Firebase configuration
+// Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAe_zfT25zPIY6FevnY9P1ZlhE9f7RtLhM",
-    authDomain: "uniproj-ccbb3.firebaseapp.com",
-    databaseURL: "https://uniproj-ccbb3-default-rtdb.firebaseio.com",
-    projectId: "uniproj-ccbb3",
-    storageBucket: "uniproj-ccbb3.appspot.com",
-    messagingSenderId: "330789578341",
-    appId: "1:330789578341:web:00d3070e129edba44e088c",
-    measurementId: "G-1SXYY50G9T",
+  apiKey: "AIzaSyAe_zfT25zPIY6FevnY9P1ZlhE9f7RtLhM",
+  authDomain: "uniproj-ccbb3.firebaseapp.com",
+  databaseURL: "https://uniproj-ccbb3-default-rtdb.firebaseio.com",
+  projectId: "uniproj-ccbb3",
+  storageBucket: "uniproj-ccbb3.firebasestorage.app",
+  messagingSenderId: "330789578341",
+  appId: "1:330789578341:web:00d3070e129edba44e088c",
+  measurementId: "G-1SXYY50G9T"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const db = getFirestore(app); // Initialize Firestore
 
 // DOM Elements
 const postButton = document.getElementById("post-tweet");
