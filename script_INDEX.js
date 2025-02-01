@@ -28,13 +28,37 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // DOM Elements
+const newTweetButton = document.getElementById("new-tweet-button");
+const tweetPopup = document.getElementById("tweet-popup");
+const closePopup = document.getElementById("close-popup");
 const postButton = document.getElementById("post-tweet");
 const tweetInput = document.getElementById("tweet-input");
 const tagsInput = document.getElementById("tags-input");
 const tweetsContainer = document.getElementById("tweets-container");
 
+const viewTweetPopup = document.getElementById("view-tweet-popup");
+const closeViewPopup = document.getElementById("close-view-popup");
+const viewTweetContent = document.getElementById("view-tweet-content");
+const viewTweetTags = document.getElementById("view-tweet-tags");
+const viewTweetTimestamp = document.getElementById("view-tweet-timestamp");
+
+// Open popup for new tweet
+newTweetButton.addEventListener("click", () => {
+    tweetPopup.style.display = "flex";
+});
+
+// Close new tweet popup
+closePopup.addEventListener("click", () => {
+    tweetPopup.style.display = "none";
+});
+
+// Close view tweet popup
+closeViewPopup.addEventListener("click", () => {
+    viewTweetPopup.style.display = "none";
+});
+
 // Create a tweet element
-function createTweetElement(tweetContent, tags, docId = null) {
+function createTweetElement(tweetContent, tags, timestamp, docId = null) {
     const postElement = document.createElement("div");
     postElement.className = "tweet";
 
@@ -52,12 +76,13 @@ function createTweetElement(tweetContent, tags, docId = null) {
 
     const timestampSpan = document.createElement("span");
     timestampSpan.className = "timestamp";
-    timestampSpan.textContent = new Date().toLocaleString();
+    timestampSpan.textContent = new Date(timestamp).toLocaleString();
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "delete-button";
     deleteButton.textContent = "Delete";
-    deleteButton.addEventListener("click", async () => {
+    deleteButton.addEventListener("click", async (e) => {
+        e.stopPropagation(); // Prevent the tweet container click event
         if (confirm("Are you sure you want to delete this tweet?")) {
             if (docId) {
                 try {
@@ -76,6 +101,19 @@ function createTweetElement(tweetContent, tags, docId = null) {
     postElement.appendChild(tagsContainer);
     postElement.appendChild(timestampSpan);
     postElement.appendChild(deleteButton);
+
+    // Make the tweet container clickable
+    postElement.addEventListener("click", () => {
+        viewTweetContent.textContent = tweetContent;
+        viewTweetTags.innerHTML = "";
+        tags.forEach((tag) => {
+            const tagElement = document.createElement("span");
+            tagElement.textContent = `#${tag.trim()}`;
+            viewTweetTags.appendChild(tagElement);
+        });
+        viewTweetTimestamp.textContent = new Date(timestamp).toLocaleString();
+        viewTweetPopup.style.display = "flex";
+    });
 
     return postElement;
 }
@@ -98,11 +136,12 @@ postButton.addEventListener("click", async () => {
         });
         console.log("Tweet posted with ID:", docRef.id);
 
-        const newTweet = createTweetElement(tweetContent, tags, docRef.id);
+        const newTweet = createTweetElement(tweetContent, tags, new Date(), docRef.id);
         tweetsContainer.prepend(newTweet);
 
         tweetInput.value = "";
         tagsInput.value = "";
+        tweetPopup.style.display = "none";
     } catch (error) {
         console.error("Error posting tweet:", error);
         alert("Failed to post tweet. Please try again.");
@@ -120,7 +159,7 @@ async function loadPosts() {
         tweetsContainer.innerHTML = "";
         querySnapshot.forEach((doc) => {
             const post = doc.data();
-            const postElement = createTweetElement(post.content, post.tags || [], doc.id);
+            const postElement = createTweetElement(post.content, post.tags || [], post.timestamp, doc.id);
             tweetsContainer.appendChild(postElement);
         });
     } catch (error) {

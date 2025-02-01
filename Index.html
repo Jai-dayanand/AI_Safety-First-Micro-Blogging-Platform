@@ -28,28 +28,40 @@
                 <ul>
                     <li><a href="Index.html">Home</a></li>
                     <li><a href="services.html">Services</a></li>
-                    <li><a href="#">Settings</a></li>
+                    <button id="new-tweet-button">New Tweet</button>
                 </ul>
             </nav>
         </div>
 
-        <div class="auth-buttons">
-            <button id="login-button">Log In</button>
-            <button id="signup-button">Sign Up</button>
-        </div>
+        <!-- New Tweet Button -->
+        
     </header>
 
-    <main class="main-container">
-        <section class="tweet-section">
+    <!-- Popup for New Tweet -->
+    <div id="tweet-popup" class="popup">
+        <div class="popup-content">
+            <span id="close-popup">&times;</span>
             <textarea id="tweet-input" placeholder="What's on your mind?"></textarea>
             <input id="tags-input" placeholder="Add tags (comma-separated)" />
             <button id="post-tweet">Post</button>
+        </div>
+    </div>
 
-            <!-- Container for displaying tweets -->
-            <div id="tweets-container" class="tweets-container">
-                <p>Loading tweets...</p>
-            </div>
-        </section>
+    <!-- Popup for Viewing Tweet -->
+    <div id="view-tweet-popup" class="popup">
+        <div class="popup-content">
+            <span id="close-view-popup">&times;</span>
+            <p id="view-tweet-content"></p>
+            <div id="view-tweet-tags" class="tags"></div>
+            <span id="view-tweet-timestamp" class="timestamp"></span>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <!-- Container for displaying tweets -->
+        <div id="tweets-container" class="tweets-container">
+            <p>Loading tweets...</p>
+        </div>
     </main>
 
     <footer>
