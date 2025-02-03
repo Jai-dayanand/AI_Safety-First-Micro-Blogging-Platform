@@ -159,9 +159,17 @@ async function loadPosts() {
         tweetsContainer.innerHTML = "";
         querySnapshot.forEach((doc) => {
             const post = doc.data();
-            const postElement = createTweetElement(post.content, post.tags || [], post.timestamp, doc.id);
+            const timestamp = post.timestamp?.toDate ? post.timestamp.toDate() : new Date();  // Convert Firestore Timestamp to JS Date
+        
+            const postElement = createTweetElement(
+                post.content,
+                post.tags || [],
+                timestamp,
+                doc.id
+            );
             tweetsContainer.appendChild(postElement);
         });
+        
     } catch (error) {
         tweetsContainer.innerHTML = "<p>Failed to load tweets. Please try again.</p>";
         console.error("Error loading tweets:", error);
